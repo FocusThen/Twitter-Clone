@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twitter Woof</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+    />
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <header>
+      <h1 class="title">Twitter for dogs 🐶</h1>
+    </header>
+
+    <main>
+      <div class="loading">
+        <img
+          src="https://raw.githubusercontent.com/CodingGarden/meower/master/client/loading.gif"
+          alt="loading gif"
+        />
+      </div>
+
+      <form class="form-woof">
+        <label for="name">Name</label>
+        <input
+          class="u-full-width"
+          type="text"
+          name="name"
+          placeholder="Insert your name..."
+          required
+        />
+        <label for="name">Woof</label>
+        <textarea
+          class="u-full-width"
+          type="text"
+          name="content"
+          required
+        ></textarea>
+
+        <button class="button-primary">Send Woof 🐶</button>
+      </form>
+
+      <div class="woofs"></div>
+    </main>
+
+    <script src="client.js"></script>
+  </body>
+</html>
