@@ -31,8 +31,44 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get('/woofs', (req, res) => {
-  woofs.find().then((woof) => res.json(woof));
+// version 1
+app.get('/woofs', (req, res, next) => {
+  woofs.find()
+    .then((woof) => res.json(woof))
+    .catch(next)
+})
+
+
+// version 2
+app.get('/v2/woofs', (req, res, next) => {
+
+  let { skip = 0, limit = 10, sort = 'desc' } = req.query
+
+  skip = isNaN(skip) ? 0 : Number(skip)
+  limit = isNaN(limit) ? 10 : Number(limit)
+
+  Promise.all([
+    woofs.count(),
+    woofs.find({},
+      {
+        skip,
+        limit,
+        sort: {
+          created: sort === 'desc' ? -1 : 1
+        }
+      })
+  ])
+    .then(([total, woofs]) => {
+      res.json({
+        woofs,
+        meta: {
+          total,
+          skip,
+          limit,
+          has_more: total - (skip + limit) > 0
+        }
+      });
+    }).catch(next)
 })
 
 // rateLimit middleware
@@ -52,7 +88,7 @@ function validationRequest(woof) {
 }
 
 // POST
-app.post("/woofs", (req, res) => {
+const createWoof = (req, res) => {
   if (validationRequest(req.body)) {
     // insert db here
     const woof = {
@@ -70,7 +106,10 @@ app.post("/woofs", (req, res) => {
       message: "You must fill out the fields. Woof! 🐶",
     });
   }
-});
+};
+
+app.post("/woofs", createWoof)
+app.post("/v2/woofs", createWoof)
 
 // app listener
 app.listen(process.env.PORT || 5000, () => {
